@@ -1,84 +1,69 @@
 import java.util.*;
 
-// Bogie class
-class Bogie {
-    private String bogieId;
-    private String bogieType;
-    private int capacity;
-
-    public Bogie(String bogieId, String bogieType, int capacity) {
-        this.bogieId = bogieId;
-        this.bogieType = bogieType;
-        this.capacity = capacity;
-    }
-
-    public String getBogieId() {
-        return bogieId;
-    }
-
-    public String getBogieType() {
-        return bogieType;
-    }
-
-    public int getCapacity() {
-        return capacity;
-    }
-}
-
 // Train class
 class Train {
     private String trainName;
-    private ArrayList<Bogie> bogies;
-    private HashSet<String> bogieIds; // To track unique IDs
+    private SortedSet<String> bogieIds; // Sorted & unique
 
     public Train(String trainName) {
         this.trainName = trainName;
-        this.bogies = new ArrayList<>();
-        this.bogieIds = new HashSet<>();
+        this.bogieIds = new TreeSet<>();
     }
 
-    // Add bogie with uniqueness check
-    public void addBogie(Bogie bogie) {
-        if (bogieIds.contains(bogie.getBogieId())) {
-            System.out.println("❌ Duplicate Bogie ID! Cannot add: " + bogie.getBogieId());
+    // Add bogie ID
+    public void addBogieId(String bogieId) {
+        if (bogieIds.add(bogieId)) {
+            System.out.println("✅ Bogie ID " + bogieId + " added.");
+        } else {
+            System.out.println("❌ Duplicate Bogie ID! Cannot add: " + bogieId);
+        }
+    }
+
+    // Display sorted bogie IDs
+    public void displayBogieIds() {
+        System.out.println("\n🚆 Train: " + trainName);
+        System.out.println("----- Sorted Bogie IDs -----");
+
+        for (String id : bogieIds) {
+            System.out.println(id);
+        }
+
+        System.out.println("----------------------------");
+        System.out.println("Total Unique Bogies: " + bogieIds.size());
+    }
+
+    // Show first and last bogie (extra feature)
+    public void showFirstAndLast() {
+        if (bogieIds.isEmpty()) {
+            System.out.println("No bogies available.");
             return;
         }
 
-        bogies.add(bogie);
-        bogieIds.add(bogie.getBogieId());
-        System.out.println("✅ Bogie " + bogie.getBogieId() + " added successfully.");
-    }
-
-    // Display bogies
-    public void displayBogies() {
-        System.out.println("\n🚆 Train: " + trainName);
-        System.out.println("----- Bogie List -----");
-
-        for (Bogie b : bogies) {
-            System.out.println("ID: " + b.getBogieId() +
-                    " | Type: " + b.getBogieType() +
-                    " | Capacity: " + b.getCapacity());
-        }
-
-        System.out.println("----------------------");
-        System.out.println("Total Bogies: " + bogies.size());
+        System.out.println("🔹 First Bogie: " + bogieIds.first());
+        System.out.println("🔹 Last Bogie: " + bogieIds.last());
     }
 }
 
 // Main class
-public class TrainConsistManagementApp
-{
+public class TrainConsistManagementApp {
     public static void main(String[] args) {
 
         Train train = new Train("Chennai Express");
 
-        // Adding bogies
-        train.addBogie(new Bogie("B1", "Sleeper", 72));
-        train.addBogie(new Bogie("B2", "AC 3 Tier", 64));
-        train.addBogie(new Bogie("B1", "General", 90)); // Duplicate
+        // Adding bogie IDs (unordered input)
+        train.addBogieId("B3");
+        train.addBogieId("B1");
+        train.addBogieId("B2");
+        train.addBogieId("B5");
+        train.addBogieId("B4");
+        train.addBogieId("B2"); // Duplicate
 
-        // Display
-        train.displayBogies();
+        // Display sorted order
+        train.displayBogieIds();
+
+        // Show first & last
+        train.showFirstAndLast();
     }
 }
+
 
