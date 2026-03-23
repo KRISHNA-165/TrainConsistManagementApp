@@ -29,42 +29,30 @@ class Bogie {
 class Train {
     private String trainName;
     private ArrayList<Bogie> bogies;
+    private HashSet<String> bogieIds; // To track unique IDs
 
     public Train(String trainName) {
         this.trainName = trainName;
         this.bogies = new ArrayList<>();
+        this.bogieIds = new HashSet<>();
     }
 
-    // Add bogie
+    // Add bogie with uniqueness check
     public void addBogie(Bogie bogie) {
-        bogies.add(bogie);
-        System.out.println("Bogie " + bogie.getBogieId() + " added.");
-    }
-
-    // Remove bogie by ID
-    public void removeBogie(String bogieId) {
-        Iterator<Bogie> iterator = bogies.iterator();
-
-        while (iterator.hasNext()) {
-            Bogie b = iterator.next();
-            if (b.getBogieId().equalsIgnoreCase(bogieId)) {
-                iterator.remove();
-                System.out.println("Bogie " + bogieId + " removed.");
-                return;
-            }
-        }
-        System.out.println("Bogie not found!");
-    }
-
-    // Display all bogies
-    public void displayBogies() {
-        System.out.println("\nTrain: " + trainName);
-        System.out.println("----- Bogie List -----");
-
-        if (bogies.isEmpty()) {
-            System.out.println("No bogies available.");
+        if (bogieIds.contains(bogie.getBogieId())) {
+            System.out.println("❌ Duplicate Bogie ID! Cannot add: " + bogie.getBogieId());
             return;
         }
+
+        bogies.add(bogie);
+        bogieIds.add(bogie.getBogieId());
+        System.out.println("✅ Bogie " + bogie.getBogieId() + " added successfully.");
+    }
+
+    // Display bogies
+    public void displayBogies() {
+        System.out.println("\n🚆 Train: " + trainName);
+        System.out.println("----- Bogie List -----");
 
         for (Bogie b : bogies) {
             System.out.println("ID: " + b.getBogieId() +
@@ -78,7 +66,8 @@ class Train {
 }
 
 // Main class
-public class TrainBogieApp {
+public class TrainConsistManagementApp
+{
     public static void main(String[] args) {
 
         Train train = new Train("Chennai Express");
@@ -86,15 +75,10 @@ public class TrainBogieApp {
         // Adding bogies
         train.addBogie(new Bogie("B1", "Sleeper", 72));
         train.addBogie(new Bogie("B2", "AC 3 Tier", 64));
-        train.addBogie(new Bogie("B3", "AC 2 Tier", 48));
+        train.addBogie(new Bogie("B1", "General", 90)); // Duplicate
 
-        // Display bogies
-        train.displayBogies();
-
-        // Remove a bogie
-        train.removeBogie("B2");
-
-        // Display after removal
+        // Display
         train.displayBogies();
     }
 }
+
