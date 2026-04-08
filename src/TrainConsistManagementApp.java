@@ -1,17 +1,15 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
-// Bogie class
 class Bogie {
     private String name;
     private int capacity;
 
-    // Constructor
     public Bogie(String name, int capacity) {
         this.name = name;
         this.capacity = capacity;
     }
 
-    // Getters
     public String getName() {
         return name;
     }
@@ -19,39 +17,29 @@ class Bogie {
     public int getCapacity() {
         return capacity;
     }
-
-    // Display method
-    public void display() {
-        System.out.println("Bogie: " + name + " | Capacity: " + capacity);
-    }
 }
 
-// Main class
 public class TrainConsistManagementApp {
+
+    // Method for UC8 (IMPORTANT for testing)
+    public static List<Bogie> filterBogies(List<Bogie> bogies, int threshold) {
+        return bogies.stream()
+                .filter(b -> b.getCapacity() > threshold)
+                .collect(Collectors.toList());
+    }
+
     public static void main(String[] args) {
 
-        // Create list of bogies
-        List<Bogie> bogieList = new ArrayList<>();
+        List<Bogie> bogies = new ArrayList<>();
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("AC Chair", 56));
+        bogies.add(new Bogie("First Class", 24));
 
-        // Add passenger bogies
-        bogieList.add(new Bogie("Sleeper", 72));
-        bogieList.add(new Bogie("AC Chair", 56));
-        bogieList.add(new Bogie("First Class", 24));
+        List<Bogie> filtered = filterBogies(bogies, 60);
 
-        // Sort bogies by capacity (ascending)
-        bogieList.sort(Comparator.comparingInt(Bogie::getCapacity));
-
-        System.out.println("Bogies sorted by capacity (Ascending):");
-        for (Bogie b : bogieList) {
-            b.display();
-        }
-
-        // Optional: Sort in descending order
-        bogieList.sort(Comparator.comparingInt(Bogie::getCapacity).reversed());
-
-        System.out.println("\nBogies sorted by capacity (Descending):");
-        for (Bogie b : bogieList) {
-            b.display();
-        }
+        System.out.println("Filtered Bogies (Capacity > 60):");
+        filtered.forEach(b ->
+                System.out.println(b.getName() + " - " + b.getCapacity())
+        );
     }
 }
