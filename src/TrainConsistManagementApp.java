@@ -21,11 +21,10 @@ class Bogie {
 
 public class TrainConsistManagementApp {
 
-    // Method for UC8 (IMPORTANT for testing)
-    public static List<Bogie> filterBogies(List<Bogie> bogies, int threshold) {
+    // UC9 Method: Group bogies by type (name)
+    public static Map<String, List<Bogie>> groupBogiesByType(List<Bogie> bogies) {
         return bogies.stream()
-                .filter(b -> b.getCapacity() > threshold)
-                .collect(Collectors.toList());
+                .collect(Collectors.groupingBy(Bogie::getName));
     }
 
     public static void main(String[] args) {
@@ -33,13 +32,18 @@ public class TrainConsistManagementApp {
         List<Bogie> bogies = new ArrayList<>();
         bogies.add(new Bogie("Sleeper", 72));
         bogies.add(new Bogie("AC Chair", 56));
+        bogies.add(new Bogie("Sleeper", 70));
         bogies.add(new Bogie("First Class", 24));
 
-        List<Bogie> filtered = filterBogies(bogies, 60);
+        Map<String, List<Bogie>> grouped = groupBogiesByType(bogies);
 
-        System.out.println("Filtered Bogies (Capacity > 60):");
-        filtered.forEach(b ->
-                System.out.println(b.getName() + " - " + b.getCapacity())
-        );
+        System.out.println("Grouped Bogies:");
+
+        for (String type : grouped.keySet()) {
+            System.out.println("\nType: " + type);
+            for (Bogie b : grouped.get(type)) {
+                System.out.println("Capacity: " + b.getCapacity());
+            }
+        }
     }
 }
