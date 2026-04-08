@@ -1,42 +1,44 @@
-import java.util.*;
-import java.util.stream.*;
+import java.util.Scanner;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
-class Bogie {
-    private String name;
-    private int capacity;
+public class TrainConsistManagementApp{
 
-    public Bogie(String name, int capacity) {
-        this.name = name;
-        this.capacity = capacity;
+    // UC11: Validate Train ID
+    public static boolean isValidTrainID(String trainID) {
+        // Pattern: TRN- followed by exactly 4 digits
+        Pattern pattern = Pattern.compile("TRN-\\d{4}");
+        Matcher matcher = pattern.matcher(trainID);
+        return matcher.matches();
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public int getCapacity() {
-        return capacity;
-    }
-}
-
-public class TrainConsistManagementApp {
-
-    // UC10 Method: Calculate total seating capacity
-    public static int calculateTotalSeats(List<Bogie> bogies) {
-        return bogies.stream()
-                .map(Bogie::getCapacity)      // extract capacity
-                .reduce(0, Integer::sum);    // sum all values
+    // UC11: Validate Cargo Code
+    public static boolean isValidCargoCode(String cargoCode) {
+        // Pattern: PET- followed by exactly 2 uppercase letters
+        Pattern pattern = Pattern.compile("PET-[A-Z]{2}");
+        Matcher matcher = pattern.matcher(cargoCode);
+        return matcher.matches();
     }
 
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-        List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("First Class", 24));
+        System.out.print("Enter Train ID: ");
+        String trainID = scanner.nextLine();
 
-        int totalSeats = calculateTotalSeats(bogies);
+        System.out.print("Enter Cargo Code: ");
+        String cargoCode = scanner.nextLine();
 
-        System.out.println("Total Seating Capacity: " + totalSeats);
+        if (isValidTrainID(trainID)) {
+            System.out.println("Train ID is valid.");
+        } else {
+            System.out.println("Train ID is INVALID.");
+        }
+
+        if (isValidCargoCode(cargoCode)) {
+            System.out.println("Cargo Code is valid.");
+        } else {
+            System.out.println("Cargo Code is INVALID.");
+        }
     }
 }
