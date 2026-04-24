@@ -1,119 +1,86 @@
 import java.util.*;
 
 // Main Application
-public class TrainConsistApp {
+public class TrainConsistManagementApp
+{
 
-    // 🔹 Custom Exception
-    static class InvalidCapacityException extends Exception {
-        public InvalidCapacityException(String message) {
+    // 🔹 Custom Runtime Exception
+    static class CargoSafetyException extends RuntimeException {
+        public CargoSafetyException(String message) {
             super(message);
         }
     }
 
-    // 🔹 Passenger Bogie Class
-    static class PassengerBogie {
-        private String type;
-        private int capacity;
+    // 🔹 Goods Bogie Class
+    static class GoodsBogie {
+        private String type;   // Rectangular / Cylindrical
+        private String cargo;  // Assigned cargo
 
-        public PassengerBogie(String type, int capacity) throws InvalidCapacityException {
-
-            // Fail-fast validation
-            if (capacity <= 0) {
-                throw new InvalidCapacityException("Capacity must be greater than zero");
-            }
-
+        public GoodsBogie(String type) {
             this.type = type;
-            this.capacity = capacity;
         }
 
         public String getType() {
             return type;
         }
 
-        public int getCapacity() {
-            return capacity;
+        public String getCargo() {
+            return cargo;
+        }
+
+        // 🔹 Cargo Assignment with try-catch-finally
+        public void assignCargo(String cargo) {
+            try {
+                // Safety rule: Rectangular bogie cannot carry Petroleum
+                if (type.equalsIgnoreCase("Rectangular") &&
+                        cargo.equalsIgnoreCase("Petroleum")) {
+
+                    throw new CargoSafetyException(
+                            "Unsafe assignment: Rectangular bogie cannot carry Petroleum"
+                    );
+                }
+
+                // Safe assignment
+                this.cargo = cargo;
+                System.out.println("Cargo assigned successfully: " + cargo + " to " + type + " bogie");
+
+            } catch (CargoSafetyException e) {
+                // Handle unsafe condition
+                System.out.println("Error: " + e.getMessage());
+
+            } finally {
+                // Always executes
+                System.out.println("Cargo assignment attempt completed for " + type + " bogie\n");
+            }
         }
 
         @Override
         public String toString() {
-            return type + " Bogie with capacity " + capacity;
+            return type + " Bogie carrying " + (cargo == null ? "Nothing" : cargo);
         }
     }
 
     // 🔹 Main Method
     public static void main(String[] args) {
 
-        List<PassengerBogie> bogies = new ArrayList<>();
+        List<GoodsBogie> bogies = new ArrayList<>();
 
-        try {
-            // Valid bogies
-            bogies.add(new PassengerBogie("Sleeper", 72));
-            bogies.add(new PassengerBogie("AC Chair", 60));
+        bogies.add(new GoodsBogie("Cylindrical"));
+        bogies.add(new GoodsBogie("Rectangular"));
 
-            // Invalid bogie (will throw exception)
-            bogies.add(new PassengerBogie("First Class", 0));
+        // ✅ Safe assignment
+        bogies.get(0).assignCargo("Petroleum");
 
-        } catch (InvalidCapacityException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+        // ❌ Unsafe assignment (handled gracefully)
+        bogies.get(1).assignCargo("Petroleum");
 
-        // Display valid bogies
-        System.out.println("\nValid Bogies in Train:");
-        for (PassengerBogie b : bogies) {
+        // ✅ Another safe assignment to prove program continues
+        bogies.get(1).assignCargo("Coal");
+
+        // Display final state
+        System.out.println("Final Bogie Status:");
+        for (GoodsBogie b : bogies) {
             System.out.println(b);
-        }
-    }
-} {
-
-    public static void main(String[] args) {
-
-        // Create dataset (large dataset for meaningful comparison)
-        List<PassengerBogie> bogies = new ArrayList<>();
-        for (int i = 0; i < 100000; i++) {
-            bogies.add(new PassengerBogie("Sleeper", (i % 100) + 1));
-        }
-
-        // -------------------------------
-        // Loop-Based Filtering
-        // -------------------------------
-        long loopStart = System.nanoTime();
-
-        List<PassengerBogie> loopResult = new ArrayList<>();
-        for (PassengerBogie bogie : bogies) {
-            if (bogie.getCapacity() > 60) {
-                loopResult.add(bogie);
-            }
-        }
-
-        long loopEnd = System.nanoTime();
-        long loopTime = loopEnd - loopStart;
-
-        // -------------------------------
-        // Stream-Based Filtering
-        // -------------------------------
-        long streamStart = System.nanoTime();
-
-        List<PassengerBogie> streamResult = bogies.stream()
-                .filter(b -> b.getCapacity() > 60)
-                .collect(Collectors.toList());
-
-        long streamEnd = System.nanoTime();
-        long streamTime = streamEnd - streamStart;
-
-        // -------------------------------
-        // Output Results
-        // -------------------------------
-        System.out.println("Loop Result Count   : " + loopResult.size());
-        System.out.println("Stream Result Count : " + streamResult.size());
-
-        System.out.println("Loop Execution Time   : " + loopTime + " ns");
-        System.out.println("Stream Execution Time : " + streamTime + " ns");
-
-        // Consistency Check
-        if (loopResult.size() == streamResult.size()) {
-            System.out.println("✅ Results Match");
-        } else {
-            System.out.println("❌ Results Do NOT Match");
         }
     }
 }
