@@ -1,30 +1,69 @@
 import java.util.*;
-import java.util.stream.*;
 
-class PassengerBogie {
-    private String type;
-    private int capacity;
+// Main Application
+public class TrainConsistApp {
 
-    public PassengerBogie(String type, int capacity) {
-        this.type = type;
-        this.capacity = capacity;
+    // 🔹 Custom Exception
+    static class InvalidCapacityException extends Exception {
+        public InvalidCapacityException(String message) {
+            super(message);
+        }
     }
 
-    public String getType() {
-        return type;
+    // 🔹 Passenger Bogie Class
+    static class PassengerBogie {
+        private String type;
+        private int capacity;
+
+        public PassengerBogie(String type, int capacity) throws InvalidCapacityException {
+
+            // Fail-fast validation
+            if (capacity <= 0) {
+                throw new InvalidCapacityException("Capacity must be greater than zero");
+            }
+
+            this.type = type;
+            this.capacity = capacity;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public int getCapacity() {
+            return capacity;
+        }
+
+        @Override
+        public String toString() {
+            return type + " Bogie with capacity " + capacity;
+        }
     }
 
-    public int getCapacity() {
-        return capacity;
-    }
+    // 🔹 Main Method
+    public static void main(String[] args) {
 
-    @Override
-    public String toString() {
-        return type + " (" + capacity + ")";
-    }
-}
+        List<PassengerBogie> bogies = new ArrayList<>();
 
-public class TrainConsistManagementApp {
+        try {
+            // Valid bogies
+            bogies.add(new PassengerBogie("Sleeper", 72));
+            bogies.add(new PassengerBogie("AC Chair", 60));
+
+            // Invalid bogie (will throw exception)
+            bogies.add(new PassengerBogie("First Class", 0));
+
+        } catch (InvalidCapacityException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        // Display valid bogies
+        System.out.println("\nValid Bogies in Train:");
+        for (PassengerBogie b : bogies) {
+            System.out.println(b);
+        }
+    }
+} {
 
     public static void main(String[] args) {
 
