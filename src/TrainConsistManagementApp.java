@@ -1,86 +1,61 @@
 import java.util.*;
 
-// Main Application
-public class TrainConsistManagementApp
-{
+public class TrainConsistManagementApp {
 
-    // 🔹 Custom Runtime Exception
-    static class CargoSafetyException extends RuntimeException {
-        public CargoSafetyException(String message) {
-            super(message);
+    // 🔹 Bubble Sort Method
+    public static void bubbleSort(int[] capacities) {
+
+        int n = capacities.length;
+
+        // Outer loop for passes
+        for (int i = 0; i < n - 1; i++) {
+
+            // Optimization: track if any swap happens
+            boolean swapped = false;
+
+            // Inner loop for comparison
+            for (int j = 0; j < n - i - 1; j++) {
+
+                // Compare adjacent elements
+                if (capacities[j] > capacities[j + 1]) {
+
+                    // 🔁 Swap
+                    int temp = capacities[j];
+                    capacities[j] = capacities[j + 1];
+                    capacities[j + 1] = temp;
+
+                    swapped = true;
+                }
+            }
+
+            // If no swaps → already sorted
+            if (!swapped) {
+                break;
+            }
         }
     }
 
-    // 🔹 Goods Bogie Class
-    static class GoodsBogie {
-        private String type;   // Rectangular / Cylindrical
-        private String cargo;  // Assigned cargo
-
-        public GoodsBogie(String type) {
-            this.type = type;
+    // 🔹 Utility to print array
+    public static void printArray(int[] arr) {
+        for (int val : arr) {
+            System.out.print(val + " ");
         }
-
-        public String getType() {
-            return type;
-        }
-
-        public String getCargo() {
-            return cargo;
-        }
-
-        // 🔹 Cargo Assignment with try-catch-finally
-        public void assignCargo(String cargo) {
-            try {
-                // Safety rule: Rectangular bogie cannot carry Petroleum
-                if (type.equalsIgnoreCase("Rectangular") &&
-                        cargo.equalsIgnoreCase("Petroleum")) {
-
-                    throw new CargoSafetyException(
-                            "Unsafe assignment: Rectangular bogie cannot carry Petroleum"
-                    );
-                }
-
-                // Safe assignment
-                this.cargo = cargo;
-                System.out.println("Cargo assigned successfully: " + cargo + " to " + type + " bogie");
-
-            } catch (CargoSafetyException e) {
-                // Handle unsafe condition
-                System.out.println("Error: " + e.getMessage());
-
-            } finally {
-                // Always executes
-                System.out.println("Cargo assignment attempt completed for " + type + " bogie\n");
-            }
-        }
-
-        @Override
-        public String toString() {
-            return type + " Bogie carrying " + (cargo == null ? "Nothing" : cargo);
-        }
+        System.out.println();
     }
 
     // 🔹 Main Method
     public static void main(String[] args) {
 
-        List<GoodsBogie> bogies = new ArrayList<>();
+        // Example dataset (can modify for testing)
+        int[] capacities = {72, 56, 24, 70, 60};
 
-        bogies.add(new GoodsBogie("Cylindrical"));
-        bogies.add(new GoodsBogie("Rectangular"));
+        System.out.println("Before Sorting:");
+        printArray(capacities);
 
-        // ✅ Safe assignment
-        bogies.get(0).assignCargo("Petroleum");
+        // Apply Bubble Sort
+        bubbleSort(capacities);
 
-        // ❌ Unsafe assignment (handled gracefully)
-        bogies.get(1).assignCargo("Petroleum");
-
-        // ✅ Another safe assignment to prove program continues
-        bogies.get(1).assignCargo("Coal");
-
-        // Display final state
-        System.out.println("Final Bogie Status:");
-        for (GoodsBogie b : bogies) {
-            System.out.println(b);
-        }
+        System.out.println("After Sorting:");
+        printArray(capacities);
     }
 }
