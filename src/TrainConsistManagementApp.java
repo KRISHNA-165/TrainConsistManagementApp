@@ -1,61 +1,38 @@
 import java.util.*;
 
-public class TrainConsistManagementApp {
+public class TrainConsistApp {
 
-    // 🔹 Bubble Sort Method
-    public static void bubbleSort(int[] capacities) {
+    // 🔹 Linear Search Method
+    public static boolean linearSearch(String[] bogieIds, String key) {
 
-        int n = capacities.length;
+        for (int i = 0; i < bogieIds.length; i++) {
 
-        // Outer loop for passes
-        for (int i = 0; i < n - 1; i++) {
-
-            // Optimization: track if any swap happens
-            boolean swapped = false;
-
-            // Inner loop for comparison
-            for (int j = 0; j < n - i - 1; j++) {
-
-                // Compare adjacent elements
-                if (capacities[j] > capacities[j + 1]) {
-
-                    // 🔁 Swap
-                    int temp = capacities[j];
-                    capacities[j] = capacities[j + 1];
-                    capacities[j + 1] = temp;
-
-                    swapped = true;
-                }
-            }
-
-            // If no swaps → already sorted
-            if (!swapped) {
-                break;
+            // Compare using equals()
+            if (bogieIds[i].equals(key)) {
+                return true; // Match found → stop early
             }
         }
-    }
 
-    // 🔹 Utility to print array
-    public static void printArray(int[] arr) {
-        for (int val : arr) {
-            System.out.print(val + " ");
-        }
-        System.out.println();
+        return false; // No match found
     }
 
     // 🔹 Main Method
     public static void main(String[] args) {
 
-        // Example dataset (can modify for testing)
-        int[] capacities = {72, 56, 24, 70, 60};
+        // Input: Unsorted bogie IDs
+        String[] bogieIds = {"BG101", "BG205", "BG309", "BG412", "BG550"};
 
-        System.out.println("Before Sorting:");
-        printArray(capacities);
+        // Search key (can modify for testing)
+        String searchKey = "BG309";
 
-        // Apply Bubble Sort
-        bubbleSort(capacities);
+        // Perform search
+        boolean found = linearSearch(bogieIds, searchKey);
 
-        System.out.println("After Sorting:");
-        printArray(capacities);
+        // Display result
+        if (found) {
+            System.out.println("Bogie ID " + searchKey + " FOUND in the train.");
+        } else {
+            System.out.println("Bogie ID " + searchKey + " NOT FOUND.");
+        }
     }
 }
