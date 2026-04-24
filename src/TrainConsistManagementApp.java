@@ -1,32 +1,56 @@
 import java.util.*;
 
-public class TrainConsistApp {
+public class TrainConsistManagementApp {
 
-    // 🔹 Linear Search Method
-    public static boolean linearSearch(String[] bogieIds, String key) {
+    // 🔹 Binary Search Method
+    public static boolean binarySearch(String[] bogieIds, String key) {
 
-        for (int i = 0; i < bogieIds.length; i++) {
+        int low = 0;
+        int high = bogieIds.length - 1;
 
-            // Compare using equals()
-            if (bogieIds[i].equals(key)) {
-                return true; // Match found → stop early
+        while (low <= high) {
+
+            int mid = (low + high) / 2;
+
+            int result = key.compareTo(bogieIds[mid]);
+
+            if (result == 0) {
+                return true; // Found
+            }
+            else if (result < 0) {
+                high = mid - 1; // Search left half
+            }
+            else {
+                low = mid + 1; // Search right half
             }
         }
 
-        return false; // No match found
+        return false; // Not found
     }
 
     // 🔹 Main Method
     public static void main(String[] args) {
 
-        // Input: Unsorted bogie IDs
-        String[] bogieIds = {"BG101", "BG205", "BG309", "BG412", "BG550"};
+        // Input (can be unsorted)
+        String[] bogieIds = {"BG309", "BG101", "BG550", "BG205", "BG412"};
 
-        // Search key (can modify for testing)
-        String searchKey = "BG309";
+        // Search key
+        String searchKey = "BG205";
 
-        // Perform search
-        boolean found = linearSearch(bogieIds, searchKey);
+        // 🔹 Ensure sorting before binary search
+        Arrays.sort(bogieIds);
+
+        System.out.println("Sorted Bogie IDs:");
+        System.out.println(Arrays.toString(bogieIds));
+
+        // Handle empty array safely
+        if (bogieIds.length == 0) {
+            System.out.println("No bogies available.");
+            return;
+        }
+
+        // Perform binary search
+        boolean found = binarySearch(bogieIds, searchKey);
 
         // Display result
         if (found) {
