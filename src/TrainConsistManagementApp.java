@@ -1,44 +1,53 @@
-import java.util.Scanner;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
+import java.util.*;
+import java.util.stream.*;
 
-public class TrainConsistManagementApp{
+class GoodsBogie {
+    private String type;   // Rectangular, Cylindrical, etc.
+    private String cargo;  // Petroleum, Coal, Grain, etc.
 
-    // UC11: Validate Train ID
-    public static boolean isValidTrainID(String trainID) {
-        // Pattern: TRN- followed by exactly 4 digits
-        Pattern pattern = Pattern.compile("TRN-\\d{4}");
-        Matcher matcher = pattern.matcher(trainID);
-        return matcher.matches();
+    public GoodsBogie(String type, String cargo) {
+        this.type = type;
+        this.cargo = cargo;
     }
 
-    // UC11: Validate Cargo Code
-    public static boolean isValidCargoCode(String cargoCode) {
-        // Pattern: PET- followed by exactly 2 uppercase letters
-        Pattern pattern = Pattern.compile("PET-[A-Z]{2}");
-        Matcher matcher = pattern.matcher(cargoCode);
-        return matcher.matches();
+    public String getType() {
+        return type;
     }
+
+    public String getCargo() {
+        return cargo;
+    }
+
+    @Override
+    public String toString() {
+        return type + " Bogie carrying " + cargo;
+    }
+}
+
+public class TrainConsistManagementApp {
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter Train ID: ");
-        String trainID = scanner.nextLine();
+        // Sample data (can be modified for testing)
+        List<GoodsBogie> bogies = Arrays.asList(
+                new GoodsBogie("Cylindrical", "Petroleum"),
+                new GoodsBogie("Rectangular", "Coal"),
+                new GoodsBogie("Cylindrical", "Petroleum")
+        );
 
-        System.out.print("Enter Cargo Code: ");
-        String cargoCode = scanner.nextLine();
+        // Safety validation using Streams
+        boolean isSafe = bogies.stream()
+                .allMatch(bogie ->
+                        // Rule: Cylindrical bogies must carry only Petroleum
+                        !bogie.getType().equalsIgnoreCase("Cylindrical") ||
+                                bogie.getCargo().equalsIgnoreCase("Petroleum")
+                );
 
-        if (isValidTrainID(trainID)) {
-            System.out.println("Train ID is valid.");
+        // Display result
+        if (isSafe) {
+            System.out.println("Train is SAFETY COMPLIANT.");
         } else {
-            System.out.println("Train ID is INVALID.");
-        }
-
-        if (isValidCargoCode(cargoCode)) {
-            System.out.println("Cargo Code is valid.");
-        } else {
-            System.out.println("Cargo Code is INVALID.");
+            System.out.println("Train is NOT SAFE!");
         }
     }
 }
